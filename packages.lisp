@@ -1,5 +1,4 @@
 (defpackage :monsoon
   (:use :common-lisp
-        :plokami
-        :opticl)
+        :plokami)
   (:export))
