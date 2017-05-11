@@ -1,5 +1,8 @@
 ;; a binary rainfall visualizer for data (esp. packets)
 ;; 0 = red, 1 = green, 2 = blue
+
+(in-package :monsoon)
+
 (defparameter *colour* 1)
 (defvar +red+ 0)
 (defvar +green+ 1)

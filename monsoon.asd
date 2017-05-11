@@ -3,8 +3,6 @@
 (asdf:defsystem #:monsoon
   :serial t
   :description "Binary rainfall visualizer for data (packets)"
-  :depends-on (#:opticl
-               #:junk-drawer
-               #:plokami)
+  :depends-on (#:plokami)
   :components ((:file "monsoon")
                (:file "packages")))
