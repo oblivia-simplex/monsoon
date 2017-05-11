@@ -10,7 +10,7 @@
 (defun asciip (b)
   (< #x1F b #x80))
 
-(defparameter *ascii-len* 6)
+(defparameter *ascii-len* 4)
 
 (defun make-row (buffer caplen width)
   (let ((row (make-array (* width 3) :element-type '(unsigned-byte 8)
@@ -24,8 +24,8 @@
                                 (loop for j below *ascii-len*
                                       collect
                                       (aref buffer
-                                            (max (1- caplen) (+ j i))))))))
-        (if ascii
+                                            (min (1- caplen) (+ j i))))))))
+        (if (and ascii (not (zerop pixel)))
             (setf (aref row (+ +red+ (* i 3))) (logior #x80 pixel))
             (setf (aref row (+ +green+ (* i 3))) pixel))))
     row))
