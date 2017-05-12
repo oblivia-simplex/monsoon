@@ -17,8 +17,8 @@
          (b (if bitwise 8 1))
          (row (make-array (* width 3 b) :element-type '(unsigned-byte 8)
                                         :initial-element 0))
-         (step (if bitwise 9 1)))
-    (loop for i below width by step do
+         (quotient (if bitwise 9 1)))
+    (loop for i below (floor (/ width quotient)) do
       (let* ((pixel (if (>= i caplen)
                         0
                         (aref buffer i)))
@@ -36,16 +36,23 @@
                                                  (max 0
                                                       (- i j)))))))))
         (cond (bitwise
-               (loop for j from 8 downto 0
-                     do
-                        (cond ((= j 8)
-                               (setf (aref row (+ +green+ (* (+ i j) 3))) #x10))
-                              ((setf (aref row (+ (if ascii +red+ +blue+)
-                                                  (* (+ i j) 3)))
-                                     (if (zerop (ldb (byte 1 (- 7 j)) pixel))
-                                         #x00
-                                         #xFF))))))
-              ((and ascii (not (zerop pixel)))
+               (let ((interval (* i 9)))
+                 (loop for j from 8 downto 0
+                       do
+                          (cond ((= j 8)
+                                 (setf (aref row
+                                             (+ +green+
+                                                (* (+ interval j) 3)))
+                                       #x20))
+                                ((setf (aref row
+                                             (+ (if ascii +red+ +blue+)
+                                                (* (+ interval j) 3)))
+                                       (if (zerop
+                                            (ldb (byte 1 (- 7 j))
+                                                 pixel))
+                                           #x00
+                                           #xFF)))))))
+               ((and ascii (not (zerop pixel)))
                (setf (aref row (+ +red+ (* i 3))) (logior #x80 pixel)))
               (t (setf (aref row (+ +green+ (* i 3))) pixel)))))
     row))
