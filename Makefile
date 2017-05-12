@@ -3,6 +3,7 @@
 
 all: monsoon capture
 
+
 monsoon: monsoon.lisp cli.lisp tweakables.lisp packages.lisp monsoon.asd graphics-utils.lisp
 	mkdir -p build
 	sbcl --script compile.lisp

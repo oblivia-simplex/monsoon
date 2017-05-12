@@ -126,7 +126,7 @@
 
 (defun vid-sniff (&key
                     (interface *interface*)
-                    (image-path nil)
+                    (image-path *image-path*)
                     (pcap-path *pcap-path*)
                     (snaplen (video-width :init t))
                     (rotate-at  (video-height :init t))
@@ -143,7 +143,7 @@
       (with-pcap-interface (pcap interface :promisc promisc
                                            :snaplen (video-width); snaplen
                                            :nbio t)
-        (with-pcap-writer (writer pcap-path :snaplen (video-width);snaplen
+        (with-pcap-writer (writer pcap-path :snaplen #x10000 ;snaplen
                                             :datalink (pcap-live-datalink pcap))
           (when filter
             (set-filter pcap filter))

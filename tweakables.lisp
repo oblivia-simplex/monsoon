@@ -14,6 +14,8 @@
 
 (defparameter *pcap-path* "/dev/null")
 
+(defparameter *image-path* nil)
+
 (defparameter *filter* "")
 
 (defparameter *rate* 1)
@@ -26,4 +28,5 @@
     *filter*
     *rate*
     *pcap-path*
+    *image-path*
     *promiscuous*))
