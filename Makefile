@@ -5,7 +5,7 @@ all: monsoon capture
 
 
 monsoon: monsoon.lisp cli.lisp tweakables.lisp packages.lisp monsoon.asd graphics-utils.lisp
-	ln -s ${CURDIR} ~/quicklisp/local-projects
+	[ -d ~/quicklisp/local-projects/monsoon ] || ln -s ${CURDIR} ~/quicklisp/local-projects
 	mkdir -p build
 	sbcl --script compile.lisp
 
