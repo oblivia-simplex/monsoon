@@ -6,5 +6,6 @@
   :depends-on (#:plokami
                #:lispbuilder-sdl)
   :components ((:file "packages")
+               (:file "graphics-utils")
                (:file "monsoon")
                ))

@@ -8,7 +8,6 @@
 (defvar +green+ 1)
 (defvar +blue+ 2)
 
-
 (defparameter *highlight-ascii* t)
 
 (defun asciip (b)
@@ -49,9 +48,6 @@
       (setf (aref row (+ +blue+ (* i 3))) #xFF))
     row))
 
-(defun make-ppm-header (height width)
-  (format nil "P6~%~D ~D~%255~%" width height))
-
 (defun write-row (path buffer caplen counter height width header-len)
   (let ((offset (+ header-len
                    (* (mod counter height) width 3)))
@@ -64,18 +60,17 @@
       (write-sequence (scan-row width) stream))
     row))
 
-
-(defun color-off (i arr color-idx)
+(defun color-offset (arr i color-idx)
   (aref arr (+ color-idx (* i 3))))
 
 (defun sdl-color-from-row (row i)
-  (sdl:color :r (color-off i row +red+)
-             :g (color-off i row +green+)
-             :b (color-off i row +blue+)))
+  (sdl:color :r (color-offset row i +red+)  
+             :g (color-offset row i +green+)
+             :b (color-offset row i +blue+)))
 
 (defun show-row (buffer caplen counter height width)
   (let ((y (mod counter height))
-        (blue (sdl:color :b #xFF))
+        (blue (sdl:color :r 0 :b #xFF :g 0)) 
         (row (make-row buffer caplen width)))
     (loop for x below width do
       (let ((color (sdl-color-from-row row x)))
@@ -83,17 +78,6 @@
         (sdl:draw-pixel-* x (mod (1+ y) height) :color blue)
         (sdl:free color)))
     (sdl:free blue)))
-
-(defun prepare-canvas (path height width)
-  (with-open-file (stream path :if-exists :supersede
-                               :element-type 'character ;'(unsigned-byte 8)
-                               :direction :output)
-    (let ((header (make-ppm-header height width)))
-      (write-sequence header stream)
-      (length header))))
-
-
-
 
 (defun sniff (pcap-path image-path interface
               &key (snaplen 512)
@@ -130,54 +114,13 @@
                      (format t "[~D] Packet length: ~A bytes (~A), on the wire: ~A bytes~%" counter caplen (length buffer) len)))
           (sleep 0.001))))))
 
-
-;; thanks to _dead from #lisp for this thing:
-(defmacro with-graphics ((&key (width 640) (height 480)
-                            (frame-rate 30)
-                            (flags ())
-                            (bpp 24)) &body forms)
-  `(block nil
-     (unwind-protect
-          (when (sdl:init-sdl)
-            (sdl:initialize-subsystems-on-startup)
-            (sdl:quit-subsystems-on-exit)
-            (sdl:window ,width ,height :bpp ,bpp
-                        :flags ,flags)
-            (setf (sdl:frame-rate) ,frame-rate)
-            (progn ;let ((*palette* ,palette))
-              ,@forms))
-       (sdl:quit-sdl))))
-
-(defun call-with-frame-function (frame-function &key one-time)
-  (sdl:with-surface (disp sdl:*default-display*)
-    (when one-time
-      (funcall frame-function)
-      (sdl:update-display))
-    (sdl:with-events ()
-      (:quit-event () t)
-      (:key-down-event (:key key)
-                       (cond ((sdl:key= key :sdl-key-escape)
-                              (sdl:push-quit-event))))
-      (:idle ()
-             (when (not one-time)
-               (funcall frame-function)
-               (sdl:update-display))))))
-
-(defmacro frame-loop ((&key one-time) &body forms)
-  `(call-with-frame-function (lambda () ,@forms) :one-time ,one-time))
-
 (defparameter *rate* 1)
 
-(defun video-width (&key (init nil))
-  (when init (sdl:init-video))
-  (aref (sdl:video-dimensions) 0))
-
-(defun video-height (&key (init nil))
-  (when init (sdl:init-video))
-  (aref (sdl:video-dimensions) 1))
-
-(defun vid-sniff (pcap-path image-path interface
-                  &key (snaplen (video-width :init t))
+(defun vid-sniff (&key
+                    (interface "wlp3s0")
+                    (image-path nil)
+                    (pcap-path "/dev/null")
+                    (snaplen (video-width :init t))
                     (rotate-at  (video-height :init t))
                     (promisc t)
                     (filter nil))
