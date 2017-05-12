@@ -76,6 +76,8 @@
                               (setq *rate* 256))
                              ((sdl:key= key :sdl-key-0)
                               (setq *rate* 512))
+                             ((sdl:key= key :sdl-key-minus)
+                              (setq *rate* -1))
                              ((sdl:key= key :sdl-key-a)
                               (setq *highlight-ascii*
                                     (not *highlight-ascii*)))

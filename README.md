@@ -28,6 +28,8 @@ sudo setcap cap_net_raw,cap_net_admin=eip build/monsoon
   (2 ^ (n-1)) packets at a time, before processing. This can help
   if monsoon seems to be lagging (use a higher n) or stuttering
   (use a lower n).
+* pressing '-' will set the capture rate to maximum
+* press ESCAPE to quit
 * press 'a' to toggle ASCII highlighting
 * press 'b' to toggle between bitwise (blue) and bytewise (green)
   representation

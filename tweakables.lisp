@@ -28,7 +28,7 @@
   "PCAP filter. Uses TCPDUMP syntax.")
 
 (defparameter *rate* 1
-  "Monsoon will process (expt 2 (- *rate* 1)) packets per iteration of its main loop.")
+  "Monsoon will process *rate* packets per iteration of its main loop.")
 
 (defparameter *width* nil
   "Default window/image width")
