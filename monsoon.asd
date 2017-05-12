@@ -3,6 +3,8 @@
 (asdf:defsystem #:monsoon
   :serial t
   :description "Binary rainfall visualizer for data (packets)"
-  :depends-on (#:plokami)
-  :components ((:file "monsoon")
-               (:file "packages")))
+  :depends-on (#:plokami
+               #:lispbuilder-sdl)
+  :components ((:file "packages")
+               (:file "monsoon")
+               ))
