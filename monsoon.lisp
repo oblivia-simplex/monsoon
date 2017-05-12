@@ -3,6 +3,7 @@
 
 (in-package :monsoon)
 
+(defparameter *debug* nil)
 (defparameter *colour* 1)
 (defvar +red+ 0)
 (defvar +green+ 1)
@@ -114,7 +115,7 @@
                      (format t "[~D] Packet length: ~A bytes (~A), on the wire: ~A bytes~%" counter caplen (length buffer) len)))
           (sleep 0.001))))))
 
-(defparameter *rate* 1)
+(defparameter *rate* 2)
 
 (defun vid-sniff (&key
                     (interface "wlp3s0")
@@ -129,7 +130,7 @@
                       (prepare-canvas image-path rotate-at snaplen))))
     (with-graphics (:width snaplen
                     :height rotate-at
-                    :frame-rate 0
+                    :frame-rate -1 
                     :flags (list sdl:sdl-resizable))
 
       (with-pcap-interface (pcap interface :promisc promisc
@@ -159,6 +160,7 @@
                                       snaplen
                                       header-len))
                          (incf counter)
-                         (format t "[~D] Packet length: ~A bytes (~A), on the wire: ~A bytes~%" counter caplen (length buffer) len)))
+                         (when *debug*
+                           (format t "[~D] Packet length: ~A bytes (~A), on the wire: ~A bytes~%" counter caplen (length buffer) len))))
             (sleep 0.01)))))))
   
