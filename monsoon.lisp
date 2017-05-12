@@ -8,7 +8,7 @@
 (defvar +blue+ 2)
 
 (defun asciip (b)
-  (< #x1F b #x80))
+  (or (< #x07 b #x0E) (< #x1F b #x80)))
 
 
 

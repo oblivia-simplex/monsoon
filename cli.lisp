@@ -11,7 +11,7 @@
 
 (defun get-opt-arg (list key)
   (let ((anything-there (member key list :test #'equalp)))
-    (when anything-there
+    (when (cdr anything-there)
       (cadr anything-there))))
 
 (defun print-help ()
@@ -45,8 +45,11 @@
                     (when (member key args :test #'equalp)
                       ;; (FORMAT T "FOUND OPT: ~S = ~S~%"
                       ;; key (get-opt-arg args key))
-                      (setf (symbol-value param)
-                            (read-from-string (get-opt-arg args key)))
+                      (let ((opt (get-opt-arg args key)))
+                        (setf (symbol-value param)
+                              (if (get param 'string)
+                                  opt
+                                  (read-from-string (get-opt-arg args key)))))
                       (format t "[+] SETTING ~A TO ~A...~%"
                               param (symbol-value param))))) T))))
 
