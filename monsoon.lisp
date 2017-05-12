@@ -39,10 +39,10 @@
                (loop for j from 8 downto 0
                      do
                         (cond ((= j 8)
-                               (setf (aref row (+ 1 (* (+ i j) 3))) #x10))
+                               (setf (aref row (+ +green+ (* (+ i j) 3))) #x10))
                               ((setf (aref row (+ (if ascii +red+ +blue+)
                                                   (* (+ i j) 3)))
-                                     (if (zerop (ldb (byte 1 j) pixel))
+                                     (if (zerop (ldb (byte 1 (- 7 j)) pixel))
                                          #x00
                                          #xFF))))))
               ((and ascii (not (zerop pixel)))
