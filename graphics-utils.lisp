@@ -14,11 +14,18 @@
 
 (defun video-width (&key (init nil))
   (when init (sdl:init-video))
-  (aref (sdl:video-dimensions) 0))
+  (let ((vd (sdl:video-dimensions)))
+    (if (null vd)
+        512
+        (aref (sdl:video-dimensions) 0))))
 
 (defun video-height (&key (init nil))
   (when init (sdl:init-video))
-  (aref (sdl:video-dimensions) 1))
+  (let ((vd (sdl:video-dimensions)))
+    (if (null vd)
+        512
+        (aref (sdl:video-dimensions) 1))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; thanks to _dead from #lisp for this these SDL macros:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -48,7 +55,35 @@
       (:quit-event () t)
       (:key-down-event (:key key)
                        (cond ((sdl:key= key :sdl-key-escape)
-                              (sdl:push-quit-event))))
+                              (sdl:push-quit-event))
+                             ((sdl:key= key :sdl-key-1)
+                              (setq *rate* 1))
+                             ((sdl:key= key :sdl-key-2)
+                              (setq *rate* 2))
+                             ((sdl:key= key :sdl-key-3)
+                              (setq *rate* 4))
+                             ((sdl:key= key :sdl-key-4)
+                              (setq *rate* 8))
+                             ((sdl:key= key :sdl-key-5)
+                              (setq *rate* 16))
+                             ((sdl:key= key :sdl-key-6)
+                              (setq *rate* 32))
+                             ((sdl:key= key :sdl-key-7)
+                              (setq *rate* 64))
+                             ((sdl:key= key :sdl-key-8)
+                              (setq *rate* 128))
+                             ((sdl:key= key :sdl-key-9)
+                              (setq *rate* 256))
+                             ((sdl:key= key :sdl-key-0)
+                              (setq *rate* 512))
+                             ((sdl:key= key :sdl-key-a)
+                              (setq *highlight-ascii*
+                                    (not *highlight-ascii*)))
+                             ((sdl:key= key :sdl-key-b)
+                              (setq *bitwise*
+                                    (not *bitwise*)))
+                             )
+                       )
       (:idle ()
              (when (not one-time)
                (funcall frame-function)

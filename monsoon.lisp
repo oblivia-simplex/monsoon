@@ -3,23 +3,22 @@
 
 (in-package :monsoon)
 
-(defparameter *debug* nil)
-(defparameter *colour* 1)
 (defvar +red+ 0)
 (defvar +green+ 1)
 (defvar +blue+ 2)
 
-(defparameter *highlight-ascii* t)
-
 (defun asciip (b)
   (< #x1F b #x80))
 
-(defparameter *ascii-len* 4)
+
 
 (defun make-row (buffer caplen width)
-  (let ((row (make-array (* width 3) :element-type '(unsigned-byte 8)
-                                     :initial-element 0)))
-    (loop for i below width do
+  (let* ((bitwise *bitwise*)
+         (b (if bitwise 8 1))
+         (row (make-array (* width 3 b) :element-type '(unsigned-byte 8)
+                                        :initial-element 0))
+         (step (if bitwise 9 1)))
+    (loop for i below width by step do
       (let* ((pixel (if (>= i caplen)
                         0
                         (aref buffer i)))
@@ -36,10 +35,19 @@
                                            (aref buffer
                                                  (max 0
                                                       (- i j)))))))))
-
-        (if (and ascii (not (zerop pixel)))
-            (setf (aref row (+ +red+ (* i 3))) (logior #x80 pixel))
-            (setf (aref row (+ +green+ (* i 3))) pixel))))
+        (cond (bitwise
+               (loop for j from 8 downto 0
+                     do
+                        (cond ((= j 8)
+                               (setf (aref row (+ 1 (* (+ i j) 3))) #x10))
+                              ((setf (aref row (+ (if ascii +red+ +blue+)
+                                                  (* (+ i j) 3)))
+                                     (if (zerop (ldb (byte 1 j) pixel))
+                                         #x00
+                                         #xFF))))))
+              ((and ascii (not (zerop pixel)))
+               (setf (aref row (+ +red+ (* i 3))) (logior #x80 pixel)))
+              (t (setf (aref row (+ +green+ (* i 3))) pixel)))))
     row))
 
 (defun scan-row (width)
@@ -71,7 +79,7 @@
 
 (defun show-row (buffer caplen counter height width)
   (let ((y (mod counter height))
-        (blue (sdl:color :r 0 :b #xFF :g 0)) 
+        (blue (sdl:color :r #xFF :b #x00 :g #xFF)) 
         (row (make-row buffer caplen width)))
     (loop for x below width do
       (let ((color (sdl-color-from-row row x)))
@@ -115,16 +123,15 @@
                      (format t "[~D] Packet length: ~A bytes (~A), on the wire: ~A bytes~%" counter caplen (length buffer) len)))
           (sleep 0.001))))))
 
-(defparameter *rate* 2)
 
 (defun vid-sniff (&key
-                    (interface "wlp3s0")
+                    (interface *interface*)
                     (image-path nil)
-                    (pcap-path "/dev/null")
+                    (pcap-path *pcap-path*)
                     (snaplen (video-width :init t))
                     (rotate-at  (video-height :init t))
-                    (promisc t)
-                    (filter nil))
+                    (promisc *promiscuous*)
+                    (filter *filter*))
   (let ((counter 0)
         (header-len (when image-path
                       (prepare-canvas image-path rotate-at snaplen))))
@@ -163,4 +170,4 @@
                          (when *debug*
                            (format t "[~D] Packet length: ~A bytes (~A), on the wire: ~A bytes~%" counter caplen (length buffer) len))))
             (sleep 0.01)))))))
-  
+
