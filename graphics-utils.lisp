@@ -82,9 +82,11 @@
                               (setq *highlight-ascii*
                                     (not *highlight-ascii*)))
                              ((sdl:key= key :sdl-key-b)
-                              (setq *bitwise*
-                                    (not *bitwise*)))
-                             )
+                              (setq *mode* :bitwise))
+                             ((sdl:key= key :sdl-key-h)
+                              (setq *mode* :heatmap))
+                             ((sdl:key= key :sdl-key-n)
+                              (setq *mode* :bytewise)))
                        )
       (:idle ()
              (when (not one-time)

@@ -9,8 +9,6 @@
 (defparameter *ascii-len* 4
   "Minimum length for a string of ASCII characters to be highlighted. Works like the -n parameter for the strings utility.")
 
-(defparameter *bitwise* nil
-  "Set to NIL to map pixels to bytes, T to map them to bits.")
 
 (defparameter *interface* "wlp3s0"
   "Network interface to sniff on.")
@@ -36,6 +34,9 @@
 (defparameter *height* nil
   "Default window/image height")
 
+(defparameter *mode* :bytewise
+  "Options: :BYTEWISE, :BITWISE, :HEATMAP")
+
 (defparameter *tweakables*
   '(*interface*
     *debug*
@@ -43,6 +44,7 @@
     *highlight-ascii*
     *filter*
     *rate*
+    *mode*
     *pcap-path*
     *image-path*
     *promiscuous*))
