@@ -127,14 +127,21 @@
 
 (defun show-row (buffer caplen counter height width)
   (let ((y (mod counter height))
-        (blue (sdl:color :r #xFF :b #x00 :g #xFF)) 
+        (x 0)
+        (xe 0)
+        (scanrow (sdl:color :r #xFF :b #x00 :g #xFF))
         (row (make-row buffer caplen width)))
-    (loop for x below width do
-      (let ((color (sdl-color-from-row row x)))
-        (sdl:draw-pixel-* x y :color (sdl-color-from-row row x))
-        (sdl:draw-pixel-* x (mod (1+ y) height) :color blue)
-        (sdl:free color)))
-    (sdl:free blue)))
+    (loop while (< xe width) do
+      (let ((e 0)
+            (color (sdl-color-from-row row x)))
+        (loop while (< e *thickness*) do
+          (sdl:draw-pixel-* xe y :color (sdl-color-from-row row x))
+          (sdl:draw-pixel-* xe (mod (1+ y) height) :color scanrow)
+          (incf e)
+          (incf xe))
+        (sdl:free color)
+        (incf x)))
+    (sdl:free scanrow)))
 
 (defun sniff (pcap-path image-path interface
               &key (snaplen 512)
@@ -201,20 +208,21 @@
                          (dump writer buffer sec usec
                                :length caplen
                                :origlength len)
-                         (show-row buffer
-                                   caplen
-                                   counter
-                                   (video-height)
-                                   (video-width))
-                         (when image-path
-                           (write-row image-path
-                                      buffer
-                                      caplen
-                                      counter
-                                      rotate-at
-                                      snaplen
-                                      header-len))
-                         (incf counter)
+                         (loop repeat *thickness* do
+                           (show-row buffer
+                                     caplen
+                                     counter
+                                     (video-height)
+                                     (video-width))
+                           (when image-path
+                             (write-row image-path
+                                        buffer
+                                        caplen
+                                        counter
+                                        rotate-at
+                                        snaplen
+                                        header-len))
+                           (incf counter))
                          (when *debug*
                            (format t "[~D] Packet length: ~A bytes (~A), on the wire: ~A bytes~%" counter caplen (length buffer) len))))
             (sleep 0.01)))))))

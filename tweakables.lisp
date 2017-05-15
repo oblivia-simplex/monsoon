@@ -37,6 +37,8 @@
 (defparameter *mode* :bytewise
   "Options: :BYTEWISE, :BITWISE, :HEATMAP")
 
+(defparameter *thickness* 1)
+
 (defparameter *tweakables*
   '(*interface*
     *debug*
