@@ -5,13 +5,13 @@
 Happy sniffing! 
 
 #### Screenshots from a Live Capture
-Heatmap mode:
+Heatmap mode (hit 'h'):
 ![heatmap](https://github.com/oblivia-simplex/monsoon/raw/master/images/heatmap.png)
 
-Bitwise mode:
+Bitwise mode (hit 'b'):
 ![bitwise](https://github.com/oblivia-simplex/monsoon/raw/master/images/bitwise.png)
 
-Bytewise mode:
+Bytewise mode (hit 'n'):
 ![bytewise](https://github.com/oblivia-simplex/monsoon/raw/master/images/bytewise.png)
 
 Run make to compile. You may need sudo privileges in order to
