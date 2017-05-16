@@ -39,13 +39,13 @@ sudo setcap cap_net_raw,cap_net_admin=eip build/monsoon
   if monsoon seems to be lagging (use a higher n) or stuttering
   (use a lower n).
 * pressing backquote will set the capture rate to maximum
-* press ESCAPE to quit
-* press 'a' to toggle ASCII highlighting
-* 'b': bitwise representation (blue for 1, black for 0)
-* 'n': bytewise representation (byte value mapped to shade of green)
-* 'h': byte-frequency heatmap (0 on the left, 255 on the right; relative frequency in packet maps to shade of amber)
-* '=': enlarge pixel size
-* '-': shrink pixel size
+* press `ESCAPE` to quit
+* press `a` to toggle ASCII highlighting
+* `b`: bitwise representation (blue for 1, black for 0)
+* `n`: bytewise representation (byte value mapped to shade of green)
+* `h`: byte-frequency heatmap (0 on the left, 255 on the right; relative frequency in packet maps to shade of amber)
+* `=`: enlarge pixel size
+* `-`: shrink pixel size
 
 Better documentation is on the way!
 
