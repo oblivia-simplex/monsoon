@@ -132,12 +132,15 @@
         (scanrow (sdl:color :r #xFF :b #x00 :g #xFF))
         (row (make-row buffer caplen width)))
     (loop while (< xe width) do
-      (let ((e 0)
-            (color (sdl-color-from-row row x)))
-        (loop while (< e *thickness*) do
-          (sdl:draw-pixel-* xe y :color (sdl-color-from-row row x))
-          (sdl:draw-pixel-* xe (mod (1+ y) height) :color scanrow)
-          (incf e)
+      (let ((color (sdl-color-from-row row x)))
+        (loop repeat *thickness* do
+          (loop repeat *thickness*
+                with ye = y do
+            (sdl:draw-pixel-* xe (mod ye height)
+                              :color (sdl-color-from-row row x))
+            (incf ye))
+          (sdl:draw-pixel-* xe (mod (+ y *thickness*) height)
+                            :color scanrow)
           (incf xe))
         (sdl:free color)
         (incf x)))
@@ -192,7 +195,7 @@
                       (prepare-canvas image-path rotate-at snaplen))))
     (with-graphics (:width snaplen
                     :height rotate-at
-                    :frame-rate -1 
+                    :frame-rate -1
                     :flags (list sdl:sdl-resizable))
 
       (with-pcap-interface (pcap interface :promisc promisc
@@ -208,7 +211,6 @@
                          (dump writer buffer sec usec
                                :length caplen
                                :origlength len)
-                         (loop repeat *thickness* do
                            (show-row buffer
                                      caplen
                                      counter
@@ -222,7 +224,7 @@
                                         rotate-at
                                         snaplen
                                         header-len))
-                           (incf counter))
+                           (incf counter *thickness*)
                          (when *debug*
                            (format t "[~D] Packet length: ~A bytes (~A), on the wire: ~A bytes~%" counter caplen (length buffer) len))))
             (sleep 0.01)))))))
