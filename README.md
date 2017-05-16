@@ -2,7 +2,9 @@
 ## A Binary Rainfall Packet Capture Visualizer
 ### Based on a description found in Greg Conti's _Security Data Visualization_
 
-#### Images from a Live Capture:
+Happy sniffing! 
+
+#### Screenshots from a Live Capture
 Heatmap mode:
 ![heatmap](https://github.com/oblivia-simplex/monsoon/raw/master/images/heatmap.png)
 
