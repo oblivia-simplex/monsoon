@@ -2,7 +2,15 @@
 ## A Binary Rainfall Packet Capture Visualizer
 ### Based on a description found in Greg Conti's _Security Data Visualization_
 
-![sample image](https://github.com/oblivia-simplex/monsoon/raw/master/images/sniff.png)
+#### Images from a Live Capture:
+Heatmap mode:
+![heatmap](https://github.com/oblivia-simplex/monsoon/raw/master/images/heatmap.png)
+
+Bitwise mode:
+![bitwise](https://github.com/oblivia-simplex/monsoon/raw/master/images/bitwise.png)
+
+Bytewise mode:
+![bytewise](https://github.com/oblivia-simplex/monsoon/raw/master/images/bytewise.png)
 
 Run make to compile. You may need sudo privileges in order to
 give monsoon packet capture permissions. 
