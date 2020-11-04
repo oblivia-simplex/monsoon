@@ -49,7 +49,7 @@
                         (setf (symbol-value param)
                               (if (get param 'string)
                                   opt
-                                  (read-from-string (get-opt-arg args key)))))
+                                  (get-opt-arg args key))))
                       (format t "[+] SETTING ~A TO ~A...~%"
                               param (symbol-value param))))) T))))
 
